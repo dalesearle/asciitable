@@ -21,7 +21,7 @@ const (
 )
 
 // TODO: what if the title length is > header width?
-func (t *table) String() string {
+func (t *Table) String() string {
 	t.createColumns()
 	t.calcTableWidth()
 	t.writeTitle()
@@ -30,7 +30,7 @@ func (t *table) String() string {
 	return t.ascii.String()
 }
 
-func (t *table) createColumns() {
+func (t *Table) createColumns() {
 	var cellWidth int
 	var columns = make([]column, 0)
 	var fmtOverhead = t.leftPad + t.rightPad
@@ -56,7 +56,7 @@ func (t *table) createColumns() {
 	t.columns = columns
 }
 
-func (t *table) calcTableWidth() {
+func (t *Table) calcTableWidth() {
 	var numInternalVerticals = len(t.headers) - 1
 	var width = numInternalVerticals
 
@@ -66,7 +66,7 @@ func (t *table) calcTableWidth() {
 	t.tableWidth = width
 }
 
-func (t *table) writeTitle() {
+func (t *Table) writeTitle() {
 	if t.title != "" {
 		t.writeRule(bordertlcorner, borderhorizontal, borderhorizontal, bordertrcorner)
 		t.writeRunes(bordervertical, 1)
@@ -77,7 +77,7 @@ func (t *table) writeTitle() {
 	}
 }
 
-func (t *table) writeHeaders() {
+func (t *Table) writeHeaders() {
 	var leftCorner = boldlefttee
 	var rightCorner = boldrighttee
 	if t.title == "" {
@@ -98,7 +98,7 @@ func (t *table) writeHeaders() {
 	t.writeRule(boldlefttee, borderhorizontal, headercross, boldrighttee)
 }
 
-func (t *table) writeRows() {
+func (t *Table) writeRows() {
 	var numRows = len(t.rows)
 	var numCols = len(t.columns)
 
@@ -125,7 +125,7 @@ func (t *table) writeRows() {
 	t.writeRule(borderblcorner, borderhorizontal, bottomtee, borderbrcorner)
 }
 
-func (t *table) writeRule(start, fill, joint, end rune) {
+func (t *Table) writeRule(start, fill, joint, end rune) {
 	var lastJoint = len(t.columns) - 1
 
 	t.writeRunes(start, 1)
@@ -139,33 +139,33 @@ func (t *table) writeRule(start, fill, joint, end rune) {
 	t.ascii.WriteRune('\n')
 }
 
-func (t *table) writeCell(c cell, colWidth int) {
+func (t *Table) writeCell(c cell, colWidth int) {
 	leftPad, rightPad := t.leftJustify(c, colWidth)
 	t.writeRunes(space, leftPad)
 	t.ascii.WriteString(c.data)
 	t.writeRunes(space, rightPad)
 }
 
-func (t *table) writeCenterJustifiedCell(c cell, colWidth int) {
+func (t *Table) writeCenterJustifiedCell(c cell, colWidth int) {
 	leftPad, rightPad := t.centerJustify(c, colWidth)
 	t.writeRunes(space, leftPad)
 	t.ascii.WriteString(c.data)
 	t.writeRunes(space, rightPad)
 }
 
-func (t *table) centerJustify(c cell, columnWidth int) (pre, post int) {
+func (t *Table) centerJustify(c cell, columnWidth int) (pre, post int) {
 	padding := columnWidth - c.dataLength
 	rightPad := padding / 2
 	leftPad := rightPad + padding%2
 	return leftPad, rightPad
 }
 
-func (t *table) leftJustify(c cell, columnWidth int) (left, right int) {
+func (t *Table) leftJustify(c cell, columnWidth int) (left, right int) {
 	leftPad := columnWidth - (c.dataLength + t.rightPad)
 	return leftPad, t.rightPad
 }
 
-func (t *table) writeRunes(r rune, writes int) {
+func (t *Table) writeRunes(r rune, writes int) {
 	for i := 0; i < writes; i++ {
 		t.ascii.WriteRune(r)
 	}

@@ -16,7 +16,7 @@ type column struct {
 	width  int
 }
 
-type table struct {
+type Table struct {
 	centerHeaders bool
 	centerData    bool
 	leftPad       int
@@ -42,37 +42,37 @@ func newColumn() *column {
 	}
 }
 
-func New() *table {
-	return &table{
+func New() *Table {
+	return &Table{
 		headers: make([]cell, 0),
 		rows:    make(map[int][]cell),
 	}
 }
 
-func (t *table) SetCellPadding(leftPad, rightPad int) {
+func (t *Table) SetCellPadding(leftPad, rightPad int) {
 	t.leftPad = leftPad
 	t.rightPad = rightPad
 }
 
-func (t *table) SetCenterData() {
+func (t *Table) SetCenterData() {
 	t.centerData = true
 }
 
-func (t *table) SetCenterHeaders() {
+func (t *Table) SetCenterHeaders() {
 	t.centerHeaders = true
 }
 
-func (t *table) SetHeaders(headers []string) {
+func (t *Table) SetHeaders(headers []string) {
 	for _, str := range headers {
 		t.headers = append(t.headers, newCell(str))
 	}
 }
 
-func (t *table) SetTitle(title string) {
+func (t *Table) SetTitle(title string) {
 	t.title = title
 }
 
-func (t *table) AddRow(rowdata []string) error {
+func (t *Table) AddRow(rowdata []string) error {
 	l := len(rowdata)
 	if l != len(t.headers) {
 		return errors.New("row length does not match the header length ")
