@@ -1,4 +1,4 @@
-package main
+package asciitable
 
 const (
 	borderblcorner   rune = 9562 //9495

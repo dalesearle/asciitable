@@ -1,4 +1,4 @@
-package main
+package asciitable
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 func Test(t *testing.T) {
-	table := NewTable()
+	table := New()
 	table.SetTitle("Testing")
 	table.SetHeaders([]string{"1", "22", "333", "4444", "55555"})
 	table.AddRow([]string{"1", "2", "3", "4", "5"})
