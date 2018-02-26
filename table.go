@@ -42,7 +42,7 @@ func newColumn() *column {
 	}
 }
 
-func NewTable() *table {
+func New() *table {
 	return &table{
 		headers: make([]cell, 0),
 		rows:    make(map[int][]cell),
