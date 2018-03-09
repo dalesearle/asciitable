@@ -87,7 +87,7 @@ func (t *Table) writeHeaders() {
 	t.writeRule(leftCorner, borderhorizontal, upperboldtee, rightCorner)
 	t.ascii.WriteRune(bordervertical)
 	for _, col := range t.columns {
-		if t.centerHeaders {
+		if t.headerJustification == JustifyCenter {
 			t.writeCenterJustifiedCell(col.header, col.width)
 		} else {
 			t.writeCell(col.header, col.width)
@@ -106,7 +106,7 @@ func (t *Table) writeRows() {
 		t.writeRunes(bordervertical, 1)
 		for colIndex, col := range t.columns {
 			cell := col.data[rowIndex]
-			if t.centerData {
+			if t.dataJustification == JustifyCenter {
 				t.writeCenterJustifiedCell(cell, col.width)
 			} else {
 				t.writeCell(cell, col.width)

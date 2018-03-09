@@ -5,6 +5,12 @@ import (
 	"errors"
 )
 
+const (
+	JustifyCenter = 1
+	JustifyLeft   = 2
+	JustifyRight  = 3
+)
+
 type cell struct {
 	data       string
 	dataLength int
@@ -17,16 +23,16 @@ type column struct {
 }
 
 type Table struct {
-	centerHeaders bool
-	centerData    bool
-	leftPad       int
-	rightPad      int
-	tableWidth    int
-	title         string
-	ascii         bytes.Buffer
-	headers       []cell
-	rows          map[int][]cell
-	columns       []column
+	headerJustification int
+	dataJustification   int
+	leftPad             int
+	rightPad            int
+	tableWidth          int
+	title               string
+	ascii               bytes.Buffer
+	headers             []cell
+	rows                map[int][]cell
+	columns             []column
 }
 
 func newCell(data string) cell {
@@ -44,8 +50,9 @@ func newColumn() *column {
 
 func New() *Table {
 	return &Table{
-		headers: make([]cell, 0),
-		rows:    make(map[int][]cell),
+		headerJustification: JustifyCenter,
+		headers:             make([]cell, 0),
+		rows:                make(map[int][]cell),
 	}
 }
 
@@ -54,12 +61,12 @@ func (t *Table) SetCellPadding(leftPad, rightPad int) {
 	t.rightPad = rightPad
 }
 
-func (t *Table) SetCenterData() {
-	t.centerData = true
+func (t *Table) SetDataJustification(justification int) {
+	t.dataJustification = justification
 }
 
-func (t *Table) SetCenterHeaders() {
-	t.centerHeaders = true
+func (t *Table) SetHeaderJustification(justification int) {
+	t.headerJustification = justification
 }
 
 func (t *Table) SetHeaders(headers []string) {
