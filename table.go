@@ -92,3 +92,13 @@ func (t *Table) AddRow(rowdata []string) error {
 	t.rows[len(t.rows)] = row
 	return nil
 }
+
+func (t *Table) String() string {
+	t.ascii.WriteString("\n")
+	t.createColumns()
+	t.calcTableWidth()
+	t.writeTitle()
+	t.writeHeaders()
+	t.writeRows()
+	return t.ascii.String()
+}

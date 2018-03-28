@@ -21,15 +21,6 @@ const (
 )
 
 // TODO: what if the title length is > header width?
-func (t *Table) String() string {
-	t.createColumns()
-	t.calcTableWidth()
-	t.writeTitle()
-	t.writeHeaders()
-	t.writeRows()
-	return t.ascii.String()
-}
-
 func (t *Table) createColumns() {
 	var cellWidth int
 	var columns = make([]column, 0)
