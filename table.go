@@ -94,6 +94,7 @@ func (t *Table) AddRow(rowdata []string) error {
 }
 
 func (t *Table) String() string {
+	t.ascii = bytes.Buffer{}
 	t.ascii.WriteString("\n")
 	t.createColumns()
 	t.calcTableWidth()
