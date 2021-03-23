@@ -12,6 +12,6 @@ func Test(t *testing.T) {
 	table.AddRow([]string{"1", "2", "3", "4", "5"})
 	table.AddRow([]string{"5", "4", "3", "2", "1"})
 	table.SetCellPadding(20, 2)
-	table.SetCenterHeaders()
+	table.SetHeaderJustification(JustifyCenter)
 	fmt.Println(table.String())
 }
