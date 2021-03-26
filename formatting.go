@@ -23,9 +23,9 @@ const (
 // TODO: what if the title length is > header width?
 func (t *Table) createColumns() {
 	var cellWidth int
-	var columns = make([]column, 0)
-	var fmtOverhead = t.leftPad + t.rightPad
+	var columns = make([]*column, 0)
 	var colWidth int
+	var fmtOverhead = t.leftPad + t.rightPad
 	var workingCell cell
 	var workingColumn *column
 
@@ -33,36 +33,53 @@ func (t *Table) createColumns() {
 		workingColumn = newColumn()
 		workingColumn.header = header
 		colWidth = header.dataLength + fmtOverhead
+
 		for j := 0; j < len(t.rows); j++ {
 			workingCell = t.rows[j][i]
 			cellWidth = workingCell.dataLength + fmtOverhead
+
 			workingColumn.data = append(workingColumn.data, workingCell)
 			if colWidth < cellWidth {
 				colWidth = cellWidth
 			}
 		}
 		workingColumn.width = colWidth
-		columns = append(columns, *workingColumn)
+		columns = append(columns, workingColumn)
 	}
 	t.columns = columns
+	t.adjustForTitle()
 }
 
-func (t *Table) calcTableWidth() {
-	var numInternalVerticals = len(t.headers) - 1
-	var width = numInternalVerticals
+func (t *Table) adjustForTitle() {
+	nc := len(t.columns)
+	colWidth := nc -1 // adjust for internal vertical rules
 
-	for _, column := range t.columns {
-		width += column.width
+	titleWidth := t.title.dataLength + t.leftPad + t.rightPad
+	for _,c := range t.columns {
+		colWidth += c.width
 	}
-	t.tableWidth = width
+	if colWidth < titleWidth {
+		t.tableWidth = titleWidth
+		adjust := titleWidth - colWidth
+		for adjust > 0 {
+			for _,c := range t.columns {
+				if adjust > 0 {
+					c.width = c.width + 1
+					adjust--
+				}
+			}
+		}
+
+	} else {
+		t.tableWidth = colWidth
+	}
 }
 
 func (t *Table) writeTitle() {
-	if t.title != "" {
+	if t.title.data != "" {
 		t.writeRule(bordertlcorner, borderhorizontal, borderhorizontal, bordertrcorner)
 		t.writeRunes(bordervertical, 1)
-		c := newCell(t.title)
-		t.writeCenterJustifiedCell(c, t.tableWidth)
+		t.writeCenterJustifiedCell(t.title, t.tableWidth)
 		t.writeRunes(bordervertical, 1)
 		t.writeRunes('\n', 1)
 	}
@@ -71,7 +88,7 @@ func (t *Table) writeTitle() {
 func (t *Table) writeHeaders() {
 	var leftCorner = boldlefttee
 	var rightCorner = boldrighttee
-	if t.title == "" {
+	if t.title.data == "" {
 		leftCorner = bordertlcorner
 		rightCorner = bordertrcorner
 	}

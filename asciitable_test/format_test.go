@@ -44,3 +44,14 @@ func TestShortTitleShortHeaderLongData(t *testing.T) {
 	table.SetHeaderJustification(asciitable.JustifyCenter)
 	fmt.Println(table.String())
 }
+
+
+
+func TestNoTitle(t *testing.T) {
+	table := asciitable.New()
+	table.SetHeaders([]string{"short", "short"})
+	table.SetCellPadding(1, 1)
+	table.AddRow([]string{"Something Longer", "Something even longer"})
+	table.SetHeaderJustification(asciitable.JustifyCenter)
+	fmt.Println(table.String())
+}

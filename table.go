@@ -23,16 +23,16 @@ type column struct {
 }
 
 type Table struct {
-	headerJustification int
-	dataJustification   int
-	leftPad             int
-	rightPad            int
-	tableWidth          int
-	title               string
 	ascii               bytes.Buffer
+	columns             []*column
+	dataJustification   int
 	headers             []cell
 	rows                map[int][]cell
-	columns             []column
+	headerJustification int
+	leftPad             int
+	rightPad            int
+	title               cell
+	tableWidth          int
 }
 
 func newCell(data string) cell {
@@ -71,12 +71,13 @@ func (t *Table) SetHeaderJustification(justification int) {
 
 func (t *Table) SetHeaders(headers []string) {
 	for _, str := range headers {
-		t.headers = append(t.headers, newCell(str))
+		c := newCell(str)
+		t.headers = append(t.headers, c)
 	}
 }
 
 func (t *Table) SetTitle(title string) {
-	t.title = title
+	t.title = newCell(title)
 }
 
 func (t *Table) AddRow(rowdata []string) error {
@@ -97,7 +98,6 @@ func (t *Table) String() string {
 	t.ascii = bytes.Buffer{}
 	t.ascii.WriteString("\n")
 	t.createColumns()
-	t.calcTableWidth()
 	t.writeTitle()
 	t.writeHeaders()
 	t.writeRows()
